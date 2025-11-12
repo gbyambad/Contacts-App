@@ -36,6 +36,9 @@ struct ContactListView: View {
     @State private var selectedSortOrder: SortOrder = .firstName
     @State private var isSortOrderInverse: Bool = false
     @State private var isAdvancedShown: Bool = false
+    @State private var showMore = false
+    @State private var currentContact: Contact = Contact()
+    @State private var isShowingAddContactSheet = false
     
     // State variable
     @State private var searchText: String = ""
@@ -79,12 +82,32 @@ struct ContactListView: View {
                     Text("Todo: Filter Picker View")
                 }
                 
+                List {
+                    ForEach(filterContacts) { contact in
+                        
+                        ContactRowItemView(
+                            contact: contact,
+                            showMore: showMore
+                        ).onTapGesture {
+                            currentContact = contact
+                            isShowingAddContactSheet.toggle()
+                        }
+                    }
+                }
+                
                 Spacer()
                 
-            }.navigationTitle("Contacts")
+            }
+            .sheet(
+                isPresented: $isShowingAddContactSheet,
+                   content: {
+                       Text("ContactRowItemView")
+                       // TODO: insvert a new contact and toggle sheet and open ContactRowItemView
+                   })
+            .navigationTitle("Contacts")
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button{
+                    ToolbarItemGroup(placement: .topBarTrailing ) {
+                        Button {
                             isAdvancedShown.toggle()
                             if !isAdvancedShown {
                                 selectedSortOrder = .firstName
@@ -92,6 +115,17 @@ struct ContactListView: View {
                         } label: {
                             Label("Advanced",
                                   systemImage: isAdvancedShown ? "wand.and.stars" : "wand.and.stars.inverse"
+                            )
+                        }
+                        // Add
+                        Button {
+                            currentContact = Contact()
+                            isShowingAddContactSheet.toggle()
+                            
+                        } label: {
+                            Label(
+                                "Add Contact",
+                                systemImage: "plus"
                             )
                         }
                     }
