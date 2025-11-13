@@ -22,7 +22,7 @@ struct ContactFormView: View {
     @FocusState private var focusedField: Field?
     
     enum Field {
-        case firstName, lastName, email, phoneNumberm, Address
+        case firstName, lastName, email, phoneNumber, address
     }
     
     // TODO isEmailValid
@@ -85,6 +85,45 @@ struct ContactFormView: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                     }
+                }
+                
+                Section("Optianol Information") {
+                    customTextField(
+                        title: "Phone Number",
+                        hint: "Enter Phone Number",
+                        value: $contact.phoneNumber,
+                        field: .phoneNumber
+                    ).keyboardType(.phonePad)
+                    
+                    customTextField(
+                        title: "Address",
+                        hint: "Enter Address",
+                        value: $contact.address,
+                        field: .address
+                    )
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }.foregroundStyle(.red)
+                }
+                
+                ToolbarItem(placement:
+                        .confirmationAction) {
+                    Button("Save") {
+                        contact.avatar = avatarData
+                        onSave(contact)
+                        dismiss()
+                    }.disabled(disable)
+                }
+            }
+            .navigationTitle("Add Contact")
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                if let avatarData = contact.avatar, let uiImage = UIImage(data: avatarData) {
+                    avatarImage = Image(uiImage: uiImage)
                 }
             }
         }
