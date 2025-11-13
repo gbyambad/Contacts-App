@@ -101,8 +101,8 @@ struct ContactListView: View {
             .sheet(
                 isPresented: $isShowingAddContactSheet,
                    content: {
-                       Text("ContactRowItemView")
-                       // TODO: insvert a new contact and toggle sheet and open ContactRowItemView
+                       Text("ContactItemView")
+                       // TODO: insvert a new contact and toggle sheet and open ContactFormView
                    })
             .navigationTitle("Contacts")
                 .toolbar {
