@@ -102,6 +102,34 @@ struct ContactFormView: View {
                         field: .address
                     )
                 }
+                Section("Avatar") {
+                    PhotosPicker(
+                        selection: $selectedImage,
+                        matching: .images,
+                        photoLibrary: .shared()
+                    ) {
+                        ZStack {
+                            AvatarView(
+                                avatarImage: avatarImage,
+                                name: contact.firstName
+                            ).frame(
+                                maxWidth: .infinity,
+                                alignment: .leading
+                            )
+                            Text("Choose an Avatar")
+                                .frame(maxWidth: .infinity,
+                                       alignment: .center
+                                )
+                        }
+                    }
+                    Button("Remove Avatar") {
+                        avatarImage = nil
+                        avatarData = nil
+                    } .foregroundStyle(.red)
+                }
+                .onChange(of: selectedImage) { _, newValue in
+                    loadImage(form: newValue)
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -127,6 +155,28 @@ struct ContactFormView: View {
                 }
             }
         }
+    }
+    private func loadImage(form item: PhotosPickerItem?) {
+        guard let item = item else { return }
+        
+        item
+            .loadTransferable(type: Data.self) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let data):
+                        if let data, let uiImage = UIImage(data: data) {
+                            avatarImage = Image(uiImage: uiImage)
+                            avatarData = data
+                            isImageError = false
+                        } else {
+                            isImageError = true
+                        }
+                    case .failure:
+                        isImageError = false
+                    }
+                }
+                
+            }
     }
 }
 

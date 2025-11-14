@@ -21,7 +21,7 @@ struct ContactRowItemView: View {
             alignment: .leading,
             spacing: 8 ) {
             HStack {
-                AvatarView(contact: contact)
+                AvatarContactView(contact: contact)
                 NameAndEmailView(contact: contact)
             }.frame(maxWidth: .infinity, alignment: .leading)
                 
