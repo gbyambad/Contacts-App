@@ -101,8 +101,14 @@ struct ContactListView: View {
             .sheet(
                 isPresented: $isShowingAddContactSheet,
                    content: {
-                       Text("ContactItemView")
-                       // TODO: insvert a new contact and toggle sheet and open ContactFormView
+                       ContactFormView(contact: $currentContact) { newContact in
+                           
+                           modelContext.insert(newContact)
+                           modelContext.insert(currentContact)
+                           
+                           try? modelContext.save()
+                           isShowingAddContactSheet.toggle()
+                       }
                    })
             .navigationTitle("Contacts")
                 .toolbar {

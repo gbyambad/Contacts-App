@@ -25,9 +25,9 @@ struct ContactFormView: View {
         case firstName, lastName, email, phoneNumber, address
     }
     
-    // TODO isEmailValid
     var isEmailValid: Bool {
-        true
+        contact.email.isEmailValid() &&
+        !contact.email.isEmpty
     }
     
     var emailCaption: String {
@@ -65,7 +65,7 @@ struct ContactFormView: View {
                     customTextField(
                         title: "Last Name",
                         hint: "Enter Last Name",
-                        value: $contact.firstName,
+                        value: $contact.lastName,
                         field: .lastName
                     )
                     VStack(alignment: .leading, spacing: 4) {
@@ -87,7 +87,7 @@ struct ContactFormView: View {
                     }
                 }
                 
-                Section("Optianol Information") {
+                Section("Optional Information") {
                     customTextField(
                         title: "Phone Number",
                         hint: "Enter Phone Number",
@@ -156,6 +156,7 @@ struct ContactFormView: View {
             }
         }
     }
+    
     private func loadImage(form item: PhotosPickerItem?) {
         guard let item = item else { return }
         
